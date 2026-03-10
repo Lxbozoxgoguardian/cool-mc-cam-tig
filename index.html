@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Workspace Launcher</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: #1a1a1a; color: white; margin: 0; }
+        .launch-btn { padding: 15px 30px; font-size: 1.1rem; cursor: pointer; background: #4285f4; border: none; border-radius: 5px; color: white; font-weight: bold; }
+        .launch-btn:hover { background: #357ae8; }
+    </style>
+</head>
+<body>
+
+    <button class="launch-btn" onclick="launchBlob()">Open Secure Workspace</button>
+
+<script>
+    const targetURL = "https://mine-craft.io/"; // Your site here
+
+    function launchBlob() {
+        const blobContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>New Tab</title>
+                <!-- Official Chrome New Tab Favicon -->
+                <link rel="icon" type="image/png" href="https://www.google.com/favicon.ico">
+                <style>
+                    body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: sans-serif; }
+                    #splash { 
+                        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                        background: #111; color: #555; display: flex; 
+                        justify-content: center; align-items: center; 
+                        z-index: 999; cursor: pointer; text-transform: uppercase; letter-spacing: 2px;
+                    }
+                    iframe { width: 100vw; height: 100vh; border: none; display: none; }
+                </style>
+            </head>
+            <body>
+                <div id="splash">Click to Initialize Session</div>
+                <iframe id="frame" src="${targetURL}" allow="fullscreen"></iframe>
+
+                <script>
+                    const splash = document.getElementById('splash');
+                    const frame = document.getElementById('frame');
+
+                    // Enter session on click
+                    splash.addEventListener('click', () => {
+                        splash.style.display = 'none';
+                        frame.style.display = 'block';
+                    });
+
+                    // Fullscreen on 'F'
+                    window.addEventListener('keydown', (e) => {
+                        if (e.key.toLowerCase() === 'f') {
+                            if (frame.requestFullscreen) frame.requestFullscreen();
+                            else if (frame.webkitRequestFullscreen) frame.webkitRequestFullscreen();
+                        }
+                    });
+
+                    // Confirmation before leaving
+                    window.onbeforeunload = function() {
+                        return "Changes you made may not be saved.";
+                    };
+                <\/script>
+            </body>
+            </html>
+        `;
+
+        const blob = new Blob([blobContent], { type: 'text/html' });
+        const blobURL = URL.createObjectURL(blob);
+        window.open(blobURL, '_blank');
+        
+        // Kills the link so it can't be reopened from history
+        setTimeout(() => URL.revokeObjectURL(blobURL), 1000);
+    }
+</script>
+
+</body>
+</html>
